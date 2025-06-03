@@ -14,6 +14,13 @@ Framework: Express.js
 Database: MongoDB (NoSQL, document-oriented database)
 ODM: Mongoose (used to interact with MongoDB more easily in Node)
 Version Control: GitHub
-Project Management: Jira
+Project Management: Trello
+
+Team Roles:
+Backend Engineers: Anish, Kush, Zach, Alfred
+Frontend Engineers: Anish, Kush, Zach, Alfred
+Product Owner: Anish
+Scrum Master: Kush
+
 
 Status: Project Proposal in progress
