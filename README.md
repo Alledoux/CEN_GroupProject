@@ -8,7 +8,7 @@ Language: JavaScript / JSX
 Framework/Library: React
 Styling: Tailwind CSS
 Backend: 
-Language: JavaScript (Node.js)
+Language: JavaScript Node.js
 Runtime: Node.js
 Framework: Express.js 
 Database: MongoDB (NoSQL, document-oriented database)
