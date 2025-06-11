@@ -23,6 +23,9 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
+const authRoutes = require("./routes/auth");
+app.use("/api/auth", authRoutes);
+
 app.get("/", (req, res) => {
   res.send("Smart Task Organizer Backend is Running!");
 });
