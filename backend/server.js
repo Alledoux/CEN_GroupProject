@@ -24,7 +24,9 @@ app.use(cors());
 app.use(express.json());
 
 const authRoutes = require("./routes/auth");
+const taskRoutes = require("./routes/Task");
 app.use("/api/auth", authRoutes);
+app.use("/api/tasks", taskRoutes);
 
 app.get("/", (req, res) => {
   res.send("Smart Task Organizer Backend is Running!");
