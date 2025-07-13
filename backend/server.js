@@ -31,6 +31,7 @@ app.use("/api/tasks", taskRoutes);
 app.get("/", (req, res) => {
   res.send("Smart Task Organizer Backend is Running!");
 });
+
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT || 5000}`);
 });

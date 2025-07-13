@@ -7,7 +7,8 @@ router.post("/", protect, async (req, res) => {
   const { title, description, deadline, importance, completion } = req.body;
   try {
     const task = new Task({
-      user: req.user.id,
+      // before was user: req.user.id,
+      user: req.user,
       title,
       description,
       deadline,
@@ -17,6 +18,7 @@ router.post("/", protect, async (req, res) => {
     await task.save();
     res.status(201).json(task);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Failed to create task", error: err.message });
   }
 });
@@ -30,10 +32,10 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
-router.put("/:id", protect, async (req, res) => {
+router.put("/:id", protect,  async (req, res) => {
   try {
     const task = await Task.findOneAndUpdate(
-      { _id: req.params.id, user: req.user.id },
+      { _id: req.params.id, user: req.user },
       req.body,
       { new: true, runValidators: true }
     );
@@ -46,7 +48,7 @@ router.put("/:id", protect, async (req, res) => {
 
 router.delete("/:id", protect, async (req, res) => {
   try {
-    const task = await Task.findOneAndDelete({ _id: req.params.id, user: req.user.id });
+    const task = await Task.findOneAndDelete({ _id: req.params.id, user: req.user });
     if (!task) return res.status(404).json({ message: "Task not found" });
     res.json({ message: "Task deleted successfully" });
   } catch (err) {
