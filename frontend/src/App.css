@@ -1,0 +1,24 @@
+/* reset and full-height */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+/* center everything */
+.App-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100%;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  background: #121212;
+}
+
+/* constrain auth/login and tasks panels */
+.auth,
+.tasks {
+  width: 100%;
+  max-width: 400px;
+  margin: 2rem auto;
+}
