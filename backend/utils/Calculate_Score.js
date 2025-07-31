@@ -5,14 +5,19 @@ function calculateScore(task) {
 
   let score = 0;
 
+  if (task.completion === 100) {
+    return 0; // Completed tasks have no score
+  }
+
+  // Overdue tasks should have the highest priority score
   if (timeRemainingMs <= 0) {
-    score += 0; 
-  } else if (timeRemainingMs <= 1000 * 60 * 60 * 24) {  
-    score += 10; //One day
-  } else if (timeRemainingMs <= 1000 * 60 * 60 * 24 * 3) { 
-    score += 7; //3 days
-  } else if (timeRemainingMs <= 1000 * 60 * 60 * 24 * 7) { 
-    score += 4; //7 days
+    score += 20;
+  } else if (timeRemainingMs <= 1000 * 60 * 60 * 24) {
+    score += 10;
+  } else if (timeRemainingMs <= 1000 * 60 * 60 * 24 * 3) {
+    score += 7;
+  } else if (timeRemainingMs <= 1000 * 60 * 60 * 24 * 7) {
+    score += 4;
   } else {
     score += 1;
   }
@@ -34,9 +39,7 @@ function calculateScore(task) {
     score += 1;
   }
 
-  if (task.completion === 100) {
-  score = 0;
-  }
-
   return score;
 }
+
+module.exports = calculateScore;
