@@ -21,12 +21,17 @@ export default function App() {
     }
   }, [token]);
 
-  const logOut = () => setToken(null);
+  const logOut = () => {
+    localStorage.removeItem("token");  
+    setToken(null); 
+  };
+
 
   return (
     <BrowserRouter>
       <div className="App-container">
         <Routes>
+          
           <Route path="/login" element={<Login onAuth={setToken} />} />
           <Route path="/register" element={<Register onAuth={setToken} />} />
           <Route
