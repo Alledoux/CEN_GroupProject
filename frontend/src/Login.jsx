@@ -8,15 +8,17 @@ export default function Login({ onAuth }) {
   const nav = useNavigate();
 
   const submit = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await api.post("/api/auth/login", form);
-      onAuth(data.token);
-      nav("/");
-    } catch (e) {
-      setErr(e.response?.data?.message || "Login failed");
-    }
-  };
+  e.preventDefault();
+  try {
+    const { data } = await api.post("/api/auth/login", form);
+    localStorage.setItem("token", data.token);      
+    onAuth(data.token);                             
+    nav("/");
+  } catch (e) {
+    setErr(e.response?.data?.message || "Login failed");
+  }
+};
+
 
   return (
     <div className="auth">
