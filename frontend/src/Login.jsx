@@ -4,44 +4,38 @@ import api from "./api";
 
 export default function Login({ onAuth }) {
   const [form, setForm] = useState({ email: "", password: "" });
-  const [err, setErr] = useState("");
+  const [err, setErr]   = useState("");
   const nav = useNavigate();
 
-  const submit = async (e) => {
-  e.preventDefault();
-  try {
-    const { data } = await api.post("/api/auth/login", form);
-    localStorage.setItem("token", data.token);      
-    onAuth(data.token);                             
-    nav("/");
-  } catch (e) {
-    setErr(e.response?.data?.message || "Login failed");
-  }
-};
+  const handle = (key) => (e) => setForm({ ...form, [key]: e.target.value });
 
+  const submit = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await api.post("/api/auth/login", form);
+      localStorage.setItem("token", data.token);
+      onAuth(data.token);
+      nav("/");
+    } catch (e) {
+      setErr(e.response?.data?.message || "Login failed");
+    }
+  };
 
   return (
-    <div className="auth">
-      <h2>Login</h2>
-      {err && <p className="error">{err}</p>}
-      <form onSubmit={submit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-        />
-        <button type="submit">Login</button>
-      </form>
-      <p>
-        Don’t have an account? <Link to="/register">Register</Link>
-      </p>
+    <div className="center-page">
+      <div className="auth">
+        <h2>Welcome back</h2>
+
+        {err && <p className="error">{err}</p>}
+
+        <form onSubmit={submit}>
+          <input type="email"    placeholder="Email"    value={form.email}    onChange={handle("email")} />
+          <input type="password" placeholder="Password" value={form.password} onChange={handle("password")} />
+          <button type="submit">Log in</button>
+        </form>
+
+        <p>Don’t have an account? <Link to="/register">Create one →</Link></p>
+      </div>
     </div>
   );
 }
