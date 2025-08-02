@@ -1,11 +1,15 @@
+/* ---- Global theme (light) ---- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* light mode by default */
+  color-scheme: light;
+  color: #0f172a;            /* dark slate text */
+  background-color: #f8fafc; /* soft light background */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,27 +17,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+/* ---- Elements ---- */
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
+  margin: 0;                 /* remove default margin */
+  /* remove the old flex + place-items that pushed content left */
   min-width: 320px;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+a {
+  font-weight: 500;
+  color: #3b82f6;
+  text-decoration: none;
 }
+a:hover {
+  color: #2563eb;
+}
+
+h1 { font-size: 3.2em; line-height: 1.1; }
 
 button {
   border-radius: 8px;
@@ -42,27 +43,23 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #1d4ed8;
+  color: #ffffff;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, background-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
+button:hover   { background-color: #2563eb; }
 button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+button:focus-visible { outline: 4px auto -webkit-focus-ring-color; }
 
-@media (prefers-color-scheme: light) {
+/* ---- Dark-mode override ---- */
+@media (prefers-color-scheme: dark) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #1e293b;    /* slate-900 */
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  a          { color: #93c5fd; }
+  a:hover    { color: #bfdbfe; }
+  button     { background-color: #3b82f6; }
+  button:hover { background-color: #60a5fa; }
 }

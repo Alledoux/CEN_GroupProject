@@ -1,231 +1,187 @@
 import { useState, useEffect } from "react";
 import api from "./api";
 
+/* -------------------------------------------------- */
+/*  Main component                                    */
+/* -------------------------------------------------- */
 export default function Tasks({ onLogout }) {
+  /* state */
   const [tasks, setTasks] = useState([]);
-  const [title, setTitle] = useState("");
-  const [deadline, setDeadline] = useState("");
-  const [importance, setImportance] = useState("2");
-  const [difficulty, setDifficulty] = useState("3");
-  const [editTaskId, setEditTaskId] = useState(null);
-  const [editTaskText, setEditTaskText] = useState("");
+  const [form, setForm] = useState({
+    title: "",
+    deadline: "",
+    importance: "2",
+    difficulty: "3",
+  });
+  const [editId, setEditId] = useState(null);
+  const [editTxt, setEditTxt] = useState("");
 
-
-  /* load tasks once */
+  /* load once */
   useEffect(() => {
-    api
-      .get("/api/tasks")
-      .then((res) => setTasks(res.data))
-      .catch(console.error);
+    api.get("/api/tasks").then((r) => setTasks(r.data)).catch(console.error);
   }, []);
 
-  /* create new task */
-  const add = async (e) => {
+  /* helpers */
+  const handleForm = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+
+  const addTask = async (e) => {
     e.preventDefault();
-    if (!title.trim()) return;
+    if (!form.title.trim()) return;
     try {
-      const { data } = await api.post("/api/tasks", { title, deadline, importance, difficulty });
+      const { data } = await api.post("/api/tasks", form);
       setTasks([data, ...tasks]);
-      setTitle("");
-      setDeadline("");
-      setImportance("2");
-      setDifficulty("3");
-    } catch (err) {
-      console.error(err);
-      alert("Create failed");
+      setForm({ title: "", deadline: "", importance: "2", difficulty: "3" });
+    } catch {
+      alert("Failed to create task");
     }
   };
 
-  /* delete a task */
-  const remove = async (id) => {
+  const delTask = async (id) => {
     try {
       await api.delete(`/api/tasks/${id}`);
       setTasks(tasks.filter((t) => t._id !== id));
-    } catch (err) {
-      console.error(err);
+    } catch {
       alert("Delete failed");
     }
   };
 
-  /* toggle task completion between 0 and 100 */
-  const toggle = async (task) => {
-    const newComp = task.completion === 100 ? 0 : 100;
+  const toggleComplete = async (t) => {
+    const newComp = t.completion === 100 ? 0 : 100;
     try {
-      const { data } = await api.put(`/api/tasks/${task._id}`, {
-        ...task,
+      const { data } = await api.put(`/api/tasks/${t._id}`, {
+        ...t,
         completion: newComp,
       });
-      setTasks(tasks.map((t) => (t._id === data._id ? data : t)));
-    } catch (err) {
-      console.error(err);
+      setTasks(tasks.map((task) => (task._id === data._id ? data : task)));
+    } catch {
       alert("Update failed");
     }
   };
 
-  const handleUpdateTask = async (id) => {
+  const saveEdit = async (id) => {
     try {
-      const { data } = await api.put(`/api/tasks/${id}`, {
-        title: editTaskText,
-      });
-      const updated = tasks.map((t) => (t._id === data._id ? data : t));
-      setTasks(updated);
-      setEditTaskId(null);
-      setEditTaskText("");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update task.");
+      const { data } = await api.put(`/api/tasks/${id}`, { title: editTxt });
+      setTasks(tasks.map((t) => (t._id === data._id ? data : t)));
+      setEditId(null);
+      setEditTxt("");
+    } catch {
+      alert("Edit failed");
     }
   };
 
+  /* -------------------------------------------------- */
   return (
-    <div className="tasks">
-      <button onClick={onLogout}>Logout</button>
-      <h2>Your Tasks</h2>
+    <>
+      {/* top bar */}
+      <nav className="topbar">
+        <span className="brand">TaskBoard</span>
+        <button className="btn logout" onClick={onLogout}>
+          Logout
+        </button>
+      </nav>
 
-      <form onSubmit={add} style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
-        <input
-          placeholder="New task title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          type="datetime-local"
-          value={deadline}
-          onChange={(e) => setDeadline(e.target.value)}
-        />
-        <select value={importance} onChange={(e) => setImportance(e.target.value)}>
-          <option value="4">High Importance</option>
-          <option value="2">Medium Importance</option>
-          <option value="1">Low Importance</option>
-        </select>
-        <input
-          type="number"
-          placeholder="Difficulty (1-5)"
-          min="1"
-          max="5"
-          value={difficulty}
-          onChange={(e) => setDifficulty(e.target.value)}
-        />
-        <button type="submit">Add</button>
-      </form>
+      {/* page content */}
+      <main className="tasks-wrapper">
+        <h1>Your Tasks</h1>
 
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {tasks.map((t) => {
-          const diffMs = t.deadline ? new Date(t.deadline) - new Date() : null;
-          const isOverdue = diffMs !== null && diffMs < 0 && t.completion !== 100;
+        {/* new-task form */}
+        <form className="task-form" onSubmit={addTask}>
+          <input
+            placeholder="Task title"
+            value={form.title}
+            onChange={handleForm("title")}
+          />
+          <input
+            type="datetime-local"
+            value={form.deadline}
+            onChange={handleForm("deadline")}
+          />
+          <select value={form.importance} onChange={handleForm("importance")}>
+            <option value="4">High</option>
+            <option value="2">Medium</option>
+            <option value="1">Low</option>
+          </select>
+          <input
+            type="number"
+            min="1"
+            max="5"
+            value={form.difficulty}
+            onChange={handleForm("difficulty")}
+            placeholder="Diff"
+          />
+          <button className="btn" type="submit">
+            Add
+          </button>
+        </form>
 
-          let dueText = "";
-          if (t.deadline) {
-            if (isOverdue) {
-              dueText = "Overdue!";
-            } else {
-              const days = Math.floor(diffMs / 86400000);
-              const hours = Math.floor((diffMs % 86400000) / 3600000);
-              if (days === 0 && hours === 0) {
-                dueText = "Due now";
-              } else if (days === 0) {
-                dueText = `Due in ${hours}h`;
-              } else {
-                dueText = `Due in ${days}d ${hours}h`;
+        {/* task list */}
+        <ul className="task-grid">
+          {tasks.map((t) => {
+            /* --- helpers per task --- */
+            const diffMs = t.deadline ? new Date(t.deadline) - new Date() : null;
+            const overdue = diffMs !== null && diffMs < 0 && t.completion !== 100;
+
+            let dueTxt = "";
+            if (t.deadline) {
+              if (overdue) dueTxt = "Overdue!";
+              else {
+                const d = Math.floor(diffMs / 86400000);
+                const h = Math.floor((diffMs % 86400000) / 3600000);
+                dueTxt = d === 0 && h === 0 ? "Due now"
+                  : `Due in ${d ? d + "d " : ""}${h}h`;
               }
             }
-          }
 
-          let priorityLabel = "Low";
-          let priorityColor = "green";
-          if (t.score > 15) {
-            priorityLabel = "High";
-            priorityColor = "red";
-          } else if (t.score > 8) {
-            priorityLabel = "Medium";
-            priorityColor = "orange";
-          }
+            /* score → priority badge */
+            let pri = "Low", badge = "badge low";
+            if (t.score > 15) { pri = "High"; badge = "badge high"; }
+            else if (t.score > 8) { pri = "Med"; badge = "badge med"; }
 
-          return (
-            <li
-              key={t._id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                marginBottom: "0.5rem",
-                color: isOverdue ? "#f55" : undefined,
-              }}
-            >
-              {/* completion checkbox */}
-              <input
-                type="checkbox"
-                checked={t.completion === 100}
-                onChange={() => toggle(t)}
-              />
-
-              {/* task title */}
-              {editTaskId === t._id ? (
+            return (
+              <li key={t._id} className={`card ${overdue ? "overdue" : ""}`}>
+                {/* complete toggle */}
                 <input
-                  type="text"
-                  value={editTaskText}
-                  onChange={(e) => setEditTaskText(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleUpdateTask(t._id);
-                  }}
-                  onBlur={() => setEditTaskId(null)}
-                  style={{
-                    flexGrow: 1,
-                    padding: "4px 8px",
-                    fontSize: "1rem",
-                  }}
-                  autoFocus
+                  type="checkbox"
+                  checked={t.completion === 100}
+                  onChange={() => toggleComplete(t)}
                 />
-              ) : (
-                <span
-                  onDoubleClick={() => {
-                    setEditTaskId(t._id);
-                    setEditTaskText(t.title);
-                  }}
-                  style={{
-                    flexGrow: 1,
-                    textDecoration:
-                      t.completion === 100 ? "line-through" : "none",
-                    opacity: t.completion === 100 ? 0.6 : 1,
-                    cursor: "pointer",
-                    userSelect: "none",
-                  }}
-                >
-                  {t.title}
-                </span>
-              )}
 
-              {/* NEW: Priority Label */}
-              <span style={{ fontSize: "0.85rem", fontWeight: "bold", color: priorityColor }}>
-                ({priorityLabel})
-              </span>
+                {/* title or edit */}
+                {editId === t._id ? (
+                  <input
+                    value={editTxt}
+                    onChange={(e) => setEditTxt(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && saveEdit(t._id)}
+                    onBlur={() => setEditId(null)}
+                    autoFocus
+                  />
+                ) : (
+                  <h2
+                    onDoubleClick={() => {
+                      setEditId(t._id);
+                      setEditTxt(t.title);
+                    }}
+                    className={t.completion === 100 ? "strike" : ""}
+                  >
+                    {t.title}
+                  </h2>
+                )}
 
-              {/* due date display */}
-              {t.deadline && (
-                <span style={{ fontSize: "0.85rem" }}>{dueText}</span>
-              )}
+                {/* meta row */}
+                <div className="meta">
+                  <span className={badge}>{pri}</span>
+                  {t.deadline && <span className="due">{dueTxt}</span>}
+                </div>
 
-              {/* delete button */}
-              <button
-                onClick={() => remove(t._id)}
-                aria-label="Delete task"
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  cursor: "pointer",
-                  fontSize: "1.2rem",
-                  lineHeight: 1,
-                }}
-              >
-                ×
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+                {/* delete */}
+                <button className="del" onClick={() => delTask(t._id)}>
+                  &times;
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </main>
+    </>
   );
 }
-
-
-//GitHub testing to see if terminal works
