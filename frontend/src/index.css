@@ -250,3 +250,22 @@ button:focus-visible { outline: 4px auto -webkit-focus-ring-color; }
   color: #111827;
 }
 
+
+.card {
+  border-left: 5px solid transparent; 
+}
+
+/* Assign a color to the border based on the category class */
+.card.category-personal {
+  border-left-color: #db5d2f; /* Orange */
+}
+
+.card.category-work {
+  border-left-color: #3b82f6; /* Blue */
+}
+
+.card.category-school {
+  border-left-color: #10b981; /* Green */
+}
+
+

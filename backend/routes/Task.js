@@ -5,7 +5,7 @@ const protect = require("../middleware/auth");
 const calculateScore = require("../utils/Calculate_Score");
 
 router.post("/", protect, async (req, res) => {
-    const { title, description, deadline, importance, difficulty, completion } = req.body;
+    const { title, description, deadline, importance, difficulty, completion, category } = req.body;
     try {
         const task = new Task({
             user: req.user,
@@ -14,9 +14,11 @@ router.post("/", protect, async (req, res) => {
             deadline,
             importance,
             difficulty,
-            completion
+            completion,
+            category // And we save it to the new Task object
         });
         await task.save();
+        // Add score before sending back
         const scoredTask = { ...task.toObject(), score: calculateScore(task) };
         res.status(201).json(scoredTask);
     } catch (err) {
@@ -50,7 +52,7 @@ router.put("/:id", protect, async (req, res) => {
             { new: true, runValidators: true }
         );
         if (!task) return res.status(404).json({ message: "Task not found" });
-        // FIX: Add the score to the updated task before sending it back
+        // Add score to updated task
         const scoredTask = { ...task.toObject(), score: calculateScore(task) };
         res.json(scoredTask);
     } catch (err) {
