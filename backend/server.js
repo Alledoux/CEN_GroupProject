@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const agenda = require('./jobs/agenda');
 require("dotenv").config();
 const app = express();
 console.log("MongoDB URI:", process.env.MONGO_URI);
@@ -34,4 +35,10 @@ app.get("/", (req, res) => {
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT || 5000}`);
+});
+(async function () {
+  await agenda.start();
+  console.log("Agenda started");
+})().catch(err => {
+  console.error("Error starting agenda:", err);
 });
