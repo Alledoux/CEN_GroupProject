@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/Users');
 const protect = require("../middleware/auth");
+const sendEmail = require('../utils/sendEmail');
 require('dotenv').config();
 router.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
@@ -22,12 +23,21 @@ router.post('/register', async (req, res) => {
       password : hashedPassword
     });
     await user.save();
-    res.status(201).json({ message: "User registered successfully" });
-  } catch(err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    await sendEmail({
+      to: email,
+      subject: 'Welcome to TaskTracker!',
+      text: `Thanks for registering with TaskTracker.`,
+      html: `<p>Hi <strong>${username}</strong>, welcome aboard! 🎉</p><p>We're excited to help you stay productive.</p>`
+    });
+
+    res.status(201).send('User registered and email sent');
+  } catch (err) {
+    console.error('Registration error:', err);
+    res.status(500).send('Registration failed');
   }
 });
+
+
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
