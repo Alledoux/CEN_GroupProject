@@ -6,7 +6,7 @@ const EditTaskModal = ({ task, onUpdate, onClose }) => {
         deadline: '',
         importance: '2',
         difficulty: '3',
-        category: 'Personal', // Default category
+        category: 'Personal', 
     });
 
     useEffect(() => {

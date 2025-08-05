@@ -1,15 +1,15 @@
-/* ---- Global theme (light) ---- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap");
 
 :root {
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  /* light mode by default */
+  
   color-scheme: light;
-  color: #0f172a;            /* dark slate text */
-  background-color: #f8fafc; /* soft light background */
+  color: #0f172a; 
+  background-color: #f8fafc; 
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -17,10 +17,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ---- Elements ---- */
+
 body {
-  margin: 0;                 /* remove default margin */
-  /* remove the old flex + place-items that pushed content left */
+  margin: 0; 
+ 
   min-width: 320px;
   min-height: 100vh;
 }
@@ -34,7 +34,10 @@ a:hover {
   color: #2563eb;
 }
 
-h1 { font-size: 3.2em; line-height: 1.1; }
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
 
 button {
   border-radius: 8px;
@@ -48,20 +51,32 @@ button {
   cursor: pointer;
   transition: border-color 0.25s, background-color 0.25s;
 }
-button:hover   { background-color: #2563eb; }
+button:hover {
+  background-color: #2563eb;
+}
 button:focus,
-button:focus-visible { outline: 4px auto -webkit-focus-ring-color; }
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
 
-/* ---- Dark-mode override ---- */
+
 @media (prefers-color-scheme: dark) {
   :root {
     color: rgba(255, 255, 255, 0.87);
-    background-color: #1e293b;    /* slate-900 */
+    background-color: #1e293b; 
   }
-  a          { color: #93c5fd; }
-  a:hover    { color: #bfdbfe; }
-  button     { background-color: #3b82f6; }
-  button:hover { background-color: #60a5fa; }
+  a {
+    color: #93c5fd;
+  }
+  a:hover {
+    color: #bfdbfe;
+  }
+  button {
+    background-color: #3b82f6;
+  }
+  button:hover {
+    background-color: #60a5fa;
+  }
 }
 .modal-backdrop {
   position: fixed;
@@ -76,7 +91,6 @@ button:focus-visible { outline: 4px auto -webkit-focus-ring-color; }
   z-index: 1000;
 }
 
-/* This is the white box that holds the form */
 .modal-content {
   background-color: white;
   padding: 2rem;
@@ -116,63 +130,63 @@ button:focus-visible { outline: 4px auto -webkit-focus-ring-color; }
   gap: 1rem;
 }
 
-/* Button styling for inside the modal */
+
 .modal-actions .btn {
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .modal-actions .btn[type="submit"] {
-    background-color: #007bff;
-    color: white;
+  background-color: #007bff;
+  color: white;
 }
 
 .modal-actions .btn[type="button"] {
-    background-color: #e9ecef;
-    color: #333;
+  background-color: #e9ecef;
+  color: #333;
 }
 
-/* Style for the new blue edit button on the card*/
+
 .card .edit {
-    position: absolute;
-    top: 8px;
-    right: 45px; /* Positioned next to the delete button */
-    background-color: #007bff; /* Blue background */
-    color: white; /* White text */
-    border: none;
-    border-radius: 5px;
-    padding: 5px 12px; /* Adjusted padding for a button look */
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    line-height: 1.2;
-    transition: background-color 0.2s;
+  position: absolute;
+  top: 8px;
+  right: 45px; 
+  background-color: #007bff; 
+  color: white; 
+  border: none;
+  border-radius: 5px;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.2;
+  transition: background-color 0.2s;
 }
 .card .edit:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3; 
 }
 
-/* Style for the delete button  */
+
 .card .del {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 22px;
-    color: #aaa;
-    padding: 0 5px;
-    line-height: 1;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  color: #aaa;
+  padding: 0 5px;
+  line-height: 1;
 }
 .card .del:hover {
-    color: #dc3545; /* Red on hover */
+  color: #dc3545; 
 }
 
-/*  View Toggle Styling*/
+
 .view-toggle {
   display: flex;
   justify-content: center;
@@ -199,15 +213,14 @@ button:focus-visible { outline: 4px auto -webkit-focus-ring-color; }
 .view-toggle button.active {
   background-color: #ffffff;
   color: #007bff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/*Calendar Container Styling */
 .calendar-container {
   background-color: #ffffff;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .rbc-event {
@@ -250,22 +263,19 @@ button:focus-visible { outline: 4px auto -webkit-focus-ring-color; }
   color: #111827;
 }
 
-
 .card {
-  border-left: 5px solid transparent; 
+  border-left: 5px solid transparent;
 }
 
-/* Assign a color to the border based on the category class */
+
 .card.category-personal {
-  border-left-color: #db5d2f; /* Orange */
+  border-left-color: #db5d2f; 
 }
 
 .card.category-work {
-  border-left-color: #3b82f6; /* Blue */
+  border-left-color: #3b82f6; 
 }
 
 .card.category-school {
-  border-left-color: #10b981; /* Green */
+  border-left-color: #10b981; 
 }
-
-
